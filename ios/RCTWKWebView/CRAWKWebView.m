@@ -86,6 +86,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 #endif
     [self setupPostMessageScript];
     [_webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
+     [_webView addObserver:self forKeyPath:@"URL" options:NSKeyValueObservingOptionNew context:nil];
     [self addSubview:_webView];
   }
   return self;
@@ -412,6 +413,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
       return;
     }
     _onProgress(@{@"progress": [change objectForKey:NSKeyValueChangeNewKey]});
+  } else if ([keyPath isEqualToString:@"URL"]) {
+  if (_onMessage) {
+    NSMutableDictionary<NSString *, id> *event = [self baseEvent];
+    _onMessage(event);
   }
 }
 
